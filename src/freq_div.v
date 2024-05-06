@@ -1,5 +1,5 @@
 module freq_div #(
-    parameter DIV_CNT = 10
+    parameter DIV_CNT = 50_000
 ) (
     input  wire clk,
     input  wire rst,

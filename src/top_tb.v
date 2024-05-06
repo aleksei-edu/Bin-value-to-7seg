@@ -2,40 +2,58 @@
 `include "binval27seg/src/top.v"
 
 module top_tb;
-    reg clk = 0;
-    wire [3:0] anode;
-    wire [7:0] cathode;
-    reg [23:0] buff_out = 0;
-    reg enable = 0;
-    reg read_enable = 0;
- 
-top uut (
-    .clk(clk),
-    .anode(anode),
-    .cathode(cathode),
-    .buff_out(buff_out),
-    .enable(enable),
-    .read_enable(read_enable)
-);
-always #5 clk = ~clk;
+  reg clk = 0;
+  reg rst_n = 1;
+  reg en = 1;
+  reg set_i = 0;
+  reg get_i = 0;
+  reg [15:0] switch = 0;
+  wire [7:0] anode;
+  wire [7:0] cathode;
+  wire mru_busy;
+  wire bcd_cvt_busy;
+  wire refreshclk;
 
-initial
-begin
-    enable = 1;
-    #10000 buff_out[23:0] = 24'd865534;;
-    read_enable = 1;
-    #100 read_enable = 0;
-    #1000000;
-//    #10000 switch[7:4] = 8;
-//    read_enable = 1;
-//    #100 read_enable = 0;
-//    #10000 switch[11:8] = 1;
-//    read_enable = 1;
-//    #100 read_enable = 0;
-//    #10000 switch[15:12] = 3;
-//    read_enable = 1;
-//    #100 read_enable = 0;
-end
+  top uut (
+      .clk          (clk),
+      .rst_n        (rst_n),
+      .en           (en),
+      .set_i        (set_i),
+      .get_i        (get_i),
+      .switch       (switch),
+      .anode        (anode),
+      .cathode      (cathode),
+      .mru_busy     (mru_busy),
+      .bcd_cvt_busy (bcd_cvt_busy),
+      .refresh_clock(refreshclk)
+  );
+  always #5 clk = ~clk;
+
+  initial begin
+    rst_n = 0;
+    en = 1;
+    @(posedge refreshclk) rst_n = 1;
+    @(posedge refreshclk) switch = 16'd65233;
+    @(posedge refreshclk) set_i = 1;
+    @(posedge refreshclk) set_i = 0;
+    @(posedge refreshclk);
+    while (mru_busy == 1) begin
+      @(posedge refreshclk);
+    end
+    @(posedge refreshclk) switch = 0;
+    @(posedge refreshclk) get_i = 1;
+    @(posedge refreshclk) get_i = 0;
+    @(posedge refreshclk);
+    while (mru_busy == 1) begin
+      @(posedge refreshclk);
+    end
+    @(posedge refreshclk);
+    while (bcd_cvt_busy == 1) begin
+      @(posedge refreshclk);
+    end
+    $finish;
+  end
 
 endmodule
+
 

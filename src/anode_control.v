@@ -35,8 +35,8 @@ module anode_control (
       3'd2: anode = 8'b1_1_1_1_1_0_1_1;  // digit 3 ON
       3'd3: anode = 8'b1_1_1_1_0_1_1_1;  // digit 4 ON 
       3'd4: anode = 8'b1_1_1_0_1_1_1_1;  // digit 5 ON 
-      3'd5: anode = 8'b1_1_1_1_1_1_1_1;  // digit 5 ON 
-      3'd6: anode = 8'b1_1_1_1_1_1_1_1;  // digit 6 ON 
+      3'd5: anode = 8'b1_1_1_1_1_1_1_1;  // digit 5 OFF 
+      3'd6: anode = 8'b1_1_1_1_1_1_1_1;  // digit 6 OFF 
       3'd7: anode = 8'b0_1_1_1_1_1_1_1;  // digit 7 ON 
     endcase
 

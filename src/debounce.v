@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module debounce #(
     parameter DELAY = 20000 /* Number of clock cycles to wait before considering the button stable */
 ) (
@@ -7,7 +9,7 @@ module debounce #(
     output reg debounced
 );
 
-  reg [19:0] counter;
+  reg [32:0] counter;
   reg prev_state;
 
   always @(posedge clk or negedge rst_n) begin
@@ -27,3 +29,4 @@ module debounce #(
     end
   end
 endmodule
+
